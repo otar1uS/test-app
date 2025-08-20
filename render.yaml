@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: custom-messenger
+    env: node
+    buildCommand: npm install && cd client && npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: SOCIAL_MANAGER_WEBHOOK
+        value: https://socialmanager.ge/webhook/other/
+      - key: API_KEY
+        value: your-api-key-here

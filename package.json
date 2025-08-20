@@ -1,0 +1,36 @@
+{
+  "name": "custom-messenger",
+  "version": "1.0.0",
+  "description": "Custom Messenger App for Social Manager Integration",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "nodemon server.js",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "install-client": "cd client && npm install",
+    "heroku-postbuild": "npm run install-client && npm run build"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2",
+    "dotenv": "^16.3.1",
+    "socket.io": "^4.7.2",
+    "axios": "^1.5.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1",
+    "concurrently": "^8.2.0"
+  },
+  "keywords": [
+    "messenger",
+    "social-manager",
+    "webhook",
+    "chat"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

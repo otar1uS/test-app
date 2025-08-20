@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "SOCIAL_MANAGER_WEBHOOK": "https://socialmanager.ge/webhook/other/",
+    "API_KEY": "your-api-key-here"
+  }
+}
