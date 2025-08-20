@@ -13,7 +13,7 @@ const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
     origin: process.env.NODE_ENV === 'production' 
-      ? ["https://custom-messenger.onrender.com", "https://*.onrender.com"]
+      ? ["https://test-app-qbfz.onrender.com", "https://*.onrender.com"]
       : "http://localhost:3000",
     methods: ["GET", "POST"],
     credentials: true
