@@ -12,8 +12,11 @@ const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"]
+    origin: process.env.NODE_ENV === 'production' 
+      ? ["https://custom-messenger.onrender.com", "https://*.onrender.com"]
+      : "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true
   }
 });
 
@@ -156,6 +159,13 @@ app.get('/webhook/test', (req, res) => {
     }
   });
 });
+
+// Serve React app for all other routes in production
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+  });
+}
 
 server.listen(PORT, () => {
   console.log(`🚀 Custom Messenger Server running on port ${PORT}`);

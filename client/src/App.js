@@ -3,7 +3,9 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import './App.css';
 
-const SOCKET_SERVER = 'http://localhost:5000';
+const SOCKET_SERVER = process.env.NODE_ENV === 'production' 
+  ? window.location.origin 
+  : 'http://localhost:5000';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -183,10 +185,12 @@ function App() {
         <div className="connection-info">
           <h3>Connection Information</h3>
           <div className="info-grid">
-            <div className="info-item">
-              <strong>Webhook URL:</strong>
-              <span>http://localhost:5000/webhook/receive</span>
-            </div>
+                         <div className="info-item">
+               <strong>Webhook URL:</strong>
+               <span>{process.env.NODE_ENV === 'production' 
+                 ? `${window.location.origin}/webhook/receive`
+                 : 'http://localhost:5000/webhook/receive'}</span>
+             </div>
             <div className="info-item">
               <strong>Social Manager:</strong>
               <span>https://socialmanager.ge/webhook/other/ (outgoing)</span>
