@@ -10,7 +10,7 @@ const SOCKET_SERVER = process.env.NODE_ENV === 'production'
 function App() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
-  const [socket, setSocket] = useState(null);
+
   const [isConnected, setIsConnected] = useState(false);
   const [senderId, setSenderId] = useState('custom_messenger_user');
   const [status, setStatus] = useState('Connecting...');
@@ -23,7 +23,6 @@ function App() {
   useEffect(() => {
     // Initialize socket connection
     const newSocket = io(SOCKET_SERVER);
-    setSocket(newSocket);
 
     newSocket.on('connect', () => {
       setIsConnected(true);
@@ -84,7 +83,7 @@ function App() {
 
   const testWebhook = async () => {
     try {
-      const response = await axios.post('/webhook/receive', {
+      await axios.post('/webhook/receive', {
         sender_id: 'test_user',
         message: 'This is a test message from the messenger app',
         timestamp: new Date().toISOString()
