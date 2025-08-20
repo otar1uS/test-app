@@ -88,7 +88,8 @@ Use the built-in test buttons:
 
 | Endpoint | Method | Description |
 |----------|--------|-------------|
-| `/webhook/receive` | POST | Receive messages from Social Manager |
+| `/webhook/receive` | POST | Receive messages from Social Manager (legacy + new format) |
+| `/api/receive-response` | POST | Receive AI responses from Social Manager (recommended) |
 | `/api/send-message` | POST | Send messages to Social Manager |
 | `/api/messages` | GET | Get all messages |
 | `/health` | GET | Health check |
@@ -114,6 +115,16 @@ Use the built-in test buttons:
 }
 ```
 
+**AI Response (from Social Manager):**
+```json
+{
+  "recipient_id": "custom_messenger_user",
+  "message": "AI response message",
+  "platform": "other",
+  "timestamp": "2025-01-20T10:00:00Z"
+}
+```
+
 ## Social Manager Integration
 
 ### Platform Configuration
@@ -123,8 +134,11 @@ Use these settings in your Social Manager platform:
 - **Platform Type:** Custom Messenger
 - **Platform ID:** `custom_messenger_001`
 - **Display Name:** My Custom Messenger App
-- **Webhook URL:** `http://localhost:5000/webhook/receive`
+- **Webhook URL:** `https://socialmanager.ge/webhook/other/` (where you send messages)
+- **Response URL:** `https://your-domain.com/api/receive-response` (where you receive AI responses)
 - **Webhook Secret/API Key:** (optional) Your API key for authentication
+
+**Important:** Make sure to set the **Response URL** to your Custom Messenger's `/api/receive-response` endpoint so that AI responses are sent back to your app.
 
 ### Authentication
 

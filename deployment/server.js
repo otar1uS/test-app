@@ -39,8 +39,27 @@ let connectedUsers = new Set();
 // Webhook endpoint to receive messages from Social Manager
 app.post('/webhook/receive', (req, res) => {
   try {
-    const { sender_id, message, timestamp } = req.body;
+    const { sender_id, message, timestamp, recipient_id } = req.body;
     
+    // Handle AI responses from Social Manager (new format)
+    if (recipient_id && message) {
+      const newMessage = {
+        id: uuidv4(),
+        sender_id: 'ai_assistant',
+        message,
+        timestamp: timestamp || new Date().toISOString(),
+        direction: 'incoming',
+        recipient_id
+      };
+
+      messages.push(newMessage);
+      io.emit('newMessage', newMessage);
+      
+      console.log('Received AI response from Social Manager:', newMessage);
+      return res.status(200).json({ success: true, message: 'AI response received' });
+    }
+    
+    // Handle regular messages (legacy format)
     if (!sender_id || !message) {
       return res.status(400).json({ error: 'Missing required fields: sender_id and message' });
     }
@@ -63,6 +82,39 @@ app.post('/webhook/receive', (req, res) => {
     
   } catch (error) {
     console.error('Webhook error:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// New endpoint specifically for AI responses from Social Manager
+app.post('/api/receive-response', (req, res) => {
+  try {
+    const { recipient_id, message, platform, timestamp } = req.body;
+    
+    if (!recipient_id || !message) {
+      return res.status(400).json({ error: 'Missing required fields: recipient_id and message' });
+    }
+
+    const newMessage = {
+      id: uuidv4(),
+      sender_id: 'ai_assistant',
+      message,
+      timestamp: timestamp || new Date().toISOString(),
+      direction: 'incoming',
+      recipient_id,
+      platform
+    };
+
+    messages.push(newMessage);
+    
+    // Broadcast to all connected clients
+    io.emit('newMessage', newMessage);
+    
+    console.log('Received AI response from Social Manager:', newMessage);
+    res.status(200).json({ success: true, message: 'AI response received' });
+    
+  } catch (error) {
+    console.error('AI response webhook error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
